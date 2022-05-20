@@ -1,44 +1,49 @@
 package com.activeservice.testcotroller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import com.activeservice.constant.Constant;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
 import com.activeservice.controller.ActiveController;
 import com.activeservice.dto.ResponseDto;
 import com.activeservice.model.MobileAccessPostRequest;
 import com.activeservice.service.ActivePersistService;
 
-@SpringBootTest
+@RunWith(SpringRunner.class)
+@WebMvcTest
 public class ActiveControllerTest {
-	@InjectMocks
-	ActiveController activeController;
+	@Autowired
+	private ActiveController activeController;
 	
-	@Mock
+	@MockBean
 	ActivePersistService activePersistService;
 	
 	@Test
 	void ActiveData() throws Exception{
 		ResponseDto responseDto= new ResponseDto();
 		MobileAccessPostRequest response = new MobileAccessPostRequest();
-		
 		responseDto.setMessage("save data successfully");
-		responseDto.setStatus(Constant.SUCCESS);
 		
-		response.setName("voicemail");
-		response.setDescription("active mobile data");
-		//response.setRelatedParty(Arrays.asList(1, "data",2 ,"mobile data"));
-		//when(activePersistService.saveData(response)).thenReturn(response);
+		Mockito.when(activePersistService.saveData(response)).thenReturn(responseDto.getMessage());
 		
+		try {
+			activePersistService.saveData(response);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		assertEquals(response, response);
 	}
 	
-	
+	@Test
+	void testGetData() throws Exception {
+		MobileAccessPostRequest mobileaccess= new MobileAccessPostRequest();
+		activeController.getData("aaaa");
+		assertEquals(mobileaccess, mobileaccess);
+	}
 
 }
